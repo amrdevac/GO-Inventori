@@ -24,8 +24,11 @@ Untuk service yang bertujuan pemakaian generic , terdapat di folder app/Provider
   untuk menampilkan log sat sebuah case mengalami kejanggalan. pada implementasinya , menggunakan chain method , terdapat beberapa pilihan yang sudah di implemtnasikan pada chain tersebut sepert ,
   - Fatal
     untuk menampilkan log error secara fatal dan memberhentikan sistem
+    ErrorHandler.Err(**err**).Check(**"Text Log Gagal"**).Error() //Java
+    ```ErrorHandler.Err(err).Check("Text").Error() //Go```
   - Error
     untuk menampilkan log error secara biasa tanpa memberhentikan sistem ataupun proses
+    _ErrorHandler.Err(**err**).Check(**"Text Log Gagal"**).Fatal()_
 
 - Hash
   untuk memproses hal hal yang berhubungan dengan hash , seperti ,
