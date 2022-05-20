@@ -2,8 +2,8 @@ package api
 
 import (
 	"login-sistem-jwt/app/Http/Controllers/Auth/AutentikasiController"
-	"login-sistem-jwt/app/Http/Controllers/Auth/Middleware"
 	"login-sistem-jwt/app/Http/Controllers/User/UserController"
+	"login-sistem-jwt/app/Http/Middleware"
 
 	"github.com/gin-gonic/gin"
 )

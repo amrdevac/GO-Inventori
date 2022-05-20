@@ -10,7 +10,7 @@ type User struct {
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email"`
 	Gender   string `json:"gender"`
-	Password string `json:"-" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 type UserUpdate struct {

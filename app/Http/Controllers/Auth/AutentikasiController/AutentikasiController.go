@@ -16,7 +16,7 @@ func Register(c *gin.Context) {
 	RequestJson.Validate(c.ShouldBindJSON(&users), c)
 	users.Password = Hash.Make(users.Password)
 	UserModel.GormConnect.Create(&users)
-	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "ok"})
+	ResponseHandler.Go(c).SetData(&users).SetHttpStatus(http.StatusCreated).SetMessage("Successfully Registered").Get()
 }
 
 func Login(c *gin.Context) {
@@ -30,7 +30,7 @@ func Login(c *gin.Context) {
 			SetHttpStatus(http.StatusBadRequest).
 			Get().StopProcess()
 	}
-	
+
 	LoginResponse := AutentikasiService.GetJWT(dataUser)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": LoginResponse, "message": "Login Berhasil"})
 }
