@@ -1,7 +1,7 @@
 package Hash
 
 import (
-	"login-sistem-jwt/app/Provider/ErrorHandler"
+	"inventori/app/Provider/ErrorHandler"
 
 	"golang.org/x/crypto/bcrypt"
 )

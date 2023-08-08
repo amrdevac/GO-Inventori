@@ -1,21 +1,36 @@
 package Mysql
 
 import (
-	ErrorHandler "login-sistem-jwt/app/Provider/ErrorHandler"
+	"fmt"
+	ErrorHandler "inventori/app/Provider/ErrorHandler"
+	"os"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/joho/godotenv"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func Connect()*gorm.DB {
+func Connect() *gorm.DB {
 
 	loadEnvErrorCheck := godotenv.Load()
 	ErrorHandler.Err(loadEnvErrorCheck).Check(".env").Fatal()
 
-	database, connectDbErrorCheck := gorm.Open("mysql", "root:@/golang_tes_login_jwt?charset=utf8&parseTime=true")
-	ErrorHandler.Err(connectDbErrorCheck).Check("Connect Mysql").Fatal()
+	mysqlLocalConnect := fmt.Sprintf(
+		"%s:%s@/%s?charset=utf8&parseTime=true",
+		os.Getenv("databaseUser"),
+		os.Getenv("databasePassword"),
+		os.Getenv("databaseName"),
+		// os.Getenv("mysql"),
+		// os.Getenv("localhost"),
+		// os.Getenv("3306"),
+	)
+
+	fmt.Println(mysqlLocalConnect)
+	// database, connectDbErrorCheck := gorm.Open("mysql", mysqlLocalConnect)
+
 	
+	database, connectDbErrorCheck := gorm.Open(mysql.Open(mysqlLocalConnect))
+	ErrorHandler.Err(connectDbErrorCheck).Check("Connect Mysql").Fatal()
 
 	return database
 }

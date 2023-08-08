@@ -1,13 +1,14 @@
 package Migration
 
 import (
-	"login-sistem-jwt/app/Database/Mysql"
-	"login-sistem-jwt/app/Http/Controllers/User/UserModel"
+	"inventori/app/Database/Mysql"
+	item "inventori/app/Http/Controllers/Item"
+	"inventori/app/Http/Controllers/User/UserModel"
 )
 
 var GormConnect = Mysql.Connect()
 
 func Migrate() {
+	GormConnect.AutoMigrate(&item.ItemTable{})
 	GormConnect.AutoMigrate(&UserModel.User{})
-
 }

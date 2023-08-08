@@ -1,8 +1,8 @@
 package AutentikasiService
 
 import (
-	"login-sistem-jwt/app/Http/Controllers/User/UserModel"
-	"login-sistem-jwt/app/Provider/Hash"
+	"inventori/app/Http/Controllers/User/UserModel"
+	"inventori/app/Provider/Hash"
 )
 
 func MathcingPassword(request UserModel.LoginRequest) (bool, UserModel.User) {

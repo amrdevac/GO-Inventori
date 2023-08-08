@@ -1,7 +1,7 @@
 package Middleware
 
 import (
-	"login-sistem-jwt/app/Provider/ResponseHandler"
+	"inventori/app/Provider/ResponseHandler"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

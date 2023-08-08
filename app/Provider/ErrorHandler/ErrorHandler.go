@@ -1,8 +1,10 @@
 package ErrorHandler
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/withmandala/go-log"
 )
 
@@ -35,5 +37,18 @@ func (value SetError) Error() {
 	logger.Info("Error When : ", value.checkName)
 	if value.ErrorValue != nil {
 		logger.Error(value.ErrorValue)
+	}
+	panic("Validation Error")
+}
+
+func (value SetError) ErrorResponse(c *gin.Context) {
+	if value.ErrorValue != nil {
+		fmt.Println("value.ErrorValue", value.ErrorValue)
+		c.JSON(500, gin.H{
+			"response_status":  false,
+			"response_message": "Payload is not json",
+			"respose_data":     value.ErrorValue,
+		})
+		// panic(value.checkName)
 	}
 }

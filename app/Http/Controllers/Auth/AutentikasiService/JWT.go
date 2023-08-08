@@ -1,8 +1,8 @@
 package AutentikasiService
 
 import (
-	"login-sistem-jwt/app/Http/Controllers/User/UserModel"
-	"login-sistem-jwt/app/Provider/ErrorHandler"
+	"inventori/app/Http/Controllers/User/UserModel"
+	"inventori/app/Provider/ErrorHandler"
 	"time"
 
 	"github.com/golang-jwt/jwt"

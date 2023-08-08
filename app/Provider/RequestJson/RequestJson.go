@@ -2,31 +2,39 @@ package RequestJson
 
 import (
 	"fmt"
-	"login-sistem-jwt/app/Provider/ErrorHandler"
-	"net/http"
+	"inventori/app/Provider/ResponseHandler"
+	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
-func Validate(argPayloadJSON error, c *gin.Context) {
-	ErrorHandler.Err(argPayloadJSON).Check("Payload not json").Error()
+var MustJSON bool
+
+func Validate(argPayloadJSON error, c *gin.Context) bool {
 	failResponse := make(map[string]string)
 	
-
+	fmt.Println("argPayloadJSON", MustJSON)
 	if argPayloadJSON != nil {
-		for _, e := range argPayloadJSON.(validator.ValidationErrors) {
-			field := strings.ToLower(e.Field())
-			errorMessage := fmt.Sprintf("%s field is %s", e.Field(), e.ActualTag())
-
-			failResponse[field] = errorMessage
+		if MustJSON {
+			if reflect.TypeOf(argPayloadJSON).String() == "*json.SyntaxError" {
+				ResponseHandler.Go(c).RequestJSONRequired(argPayloadJSON)
+				return true
+			}
 		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error":  failResponse,
-			"status": http.StatusBadRequest,
-		})
-		panic("Validation Error")
-	}
+		if reflect.TypeOf(argPayloadJSON).String() == "*json.UnmarshalTypeError" {
+			ResponseHandler.Go(c).RequestUnmarshalFailure(argPayloadJSON.Error())
+		} else {
+			for _, e := range argPayloadJSON.(validator.ValidationErrors) {
+				field := strings.ToLower(e.Field())
+				errorMessage := fmt.Sprintf("%s field is %s", e.Field(), e.ActualTag())
+				failResponse[field] = errorMessage
+			}
+			ResponseHandler.Go(c).RequestValidationFailure(failResponse)
+		}
 
+		return true
+	}
+	return false
 }

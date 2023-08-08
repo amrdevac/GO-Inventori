@@ -1,12 +1,13 @@
 package UserModel
 
 import (
-	"login-sistem-jwt/app/Database/Mysql"
+	"inventori/app/Database/Mysql"
 )
 
 var GormConnect = Mysql.Connect()
 
 type User struct {
+	UserID   string `json:"user_id" binding:"required" gorm:"primaryKey;autoIncrement"`
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email"`
 	Gender   string `json:"gender"`
@@ -14,9 +15,9 @@ type User struct {
 }
 
 type UserUpdate struct {
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email"`
-	Gender   string `json:"gender"`
+	Name   string `json:"name" binding:"required"`
+	Email  string `json:"email"`
+	Gender string `json:"gender"`
 }
 
 type LoginRequest struct {

@@ -52,7 +52,7 @@ Untuk service yang bertujuan pemakaian generic , terdapat di folder app/Provider
   untuk menampilkan response dengan ginContext yang sudah di masukan ke dalam bagian properties function tersebut
 
   ```Java
-      ResponseHandler.Go(ginContext).SetData(interface{}).SetHttpStatus(intHttpStatus).Get()
+      ResponseHandler.Go(ginContext).SetData(interface{}).SetHttpStatus(intHttpStatus).Apply()
   ```
 
 ## Modul Implemented
