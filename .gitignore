@@ -1,5 +1,1 @@
-logs/
-air
-.air.toml
-build-errors.log
-tmp/main
+./vendor
