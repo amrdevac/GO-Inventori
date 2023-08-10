@@ -1,7 +1,6 @@
 package item
 
 import (
-	"fmt"
 	"inventori/app/Provider/RequestJson"
 	"inventori/app/Provider/ResponseHandler"
 
@@ -56,7 +55,6 @@ func Store(c *gin.Context) {
 	if RequestJson.Validate(c.ShouldBind(&request), c) {
 		return
 	}
-	fmt.Println("request", request)
 	result, isSucccess := SaveOnce(request)
 	if !isSucccess {
 		return
