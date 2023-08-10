@@ -1,7 +1,9 @@
 package ResponseHandler
 
 import (
+	"fmt"
 	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -64,12 +66,14 @@ func (response Response) DatabaseFetchFail(argDBError error) Response {
 	dbError := make(map[string]interface{})
 	dbError["showing_db_error"] = true
 	if os.Getenv("ShowDatabaseErrorString") == "true" {
-		dbError["database_error_msg"] = argDBError
+
+		dbError["database_error_msg"] = fmt.Sprintf("%v", argDBError)
 		response.Data = dbError
 	} else {
 		dbError["showing_db_error"] = false
 		response.Data = dbError
 	}
+
 	response.Message = "Database process failed"
 	response.ResponseStatus = false
 	response.HttpStatus = 500
@@ -81,6 +85,14 @@ func (response Response) DataNotFound(paramSearch string) Response {
 	response.Message = "Data : " + paramSearch + " can't be found on database"
 	response.ResponseStatus = false
 	response.HttpStatus = 404
+	ginContext.JSON(response.HttpStatus, response)
+	return response
+}
+
+func (response Response) EnumNotFound(paramRequest string, enumAccepted []string) Response {
+	response.Message = "Request : " + paramRequest + " not valid, accepted value : " + strings.Join(enumAccepted, ", ")
+	response.ResponseStatus = false
+	response.HttpStatus = 400
 	ginContext.JSON(response.HttpStatus, response)
 	return response
 }
