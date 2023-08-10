@@ -14,8 +14,7 @@ var MustJSON bool
 
 func Validate(argPayloadJSON error, c *gin.Context) bool {
 	failResponse := make(map[string]string)
-	
-	fmt.Println("argPayloadJSON", MustJSON)
+
 	if argPayloadJSON != nil {
 		if MustJSON {
 			if reflect.TypeOf(argPayloadJSON).String() == "*json.SyntaxError" {
@@ -23,6 +22,7 @@ func Validate(argPayloadJSON error, c *gin.Context) bool {
 				return true
 			}
 		}
+		
 		if reflect.TypeOf(argPayloadJSON).String() == "*json.UnmarshalTypeError" {
 			ResponseHandler.Go(c).RequestUnmarshalFailure(argPayloadJSON.Error())
 		} else {
