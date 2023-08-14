@@ -12,25 +12,38 @@ import (
 )
 
 func Register(c *gin.Context) {
+	RequestJson.MustJSON = true
 	users := UserModel.User{}
-	RequestJson.Validate(c.ShouldBindJSON(&users), c)
-	users.Password = Hash.Make(users.Password)
+	if RequestJson.Validate(c.ShouldBindJSON(&users), c) {
+		return
+	}
+
+	hashPass, isSuccess := Hash.Make(users.Password)
+	if !isSuccess {
+		return
+	}
+
+	users.Password = hashPass
 	UserModel.GormConnect.Create(&users)
 	ResponseHandler.Go(c).SetData(&users).SetHttpStatus(http.StatusCreated).SetMessage("Successfully Registered").Apply()
 }
 
 func Login(c *gin.Context) {
 	requestLogin := UserModel.LoginRequest{}
-	c.ShouldBindJSON(&requestLogin)
-	result, dataUser := AutentikasiService.MathcingPassword(requestLogin)
-
-	if !result {
-		ResponseHandler.Go(c).
-			SetMessage("Username / Password tidak ditemukan").
-			SetHttpStatus(http.StatusBadRequest).
-			Apply().StopProcess()
+	if RequestJson.Validate(c.ShouldBindJSON(&requestLogin), c) {
+		return
 	}
 
-	LoginResponse := AutentikasiService.GetJWT(dataUser)
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": LoginResponse, "message": "Login Berhasil"})
+	dataUser, isSuccess := AutentikasiService.MathcingPassword(requestLogin)
+	if !isSuccess {
+		return
+	}
+
+	LoginResponse, isSuccess := AutentikasiService.GetJWT(dataUser)
+	if !isSuccess {
+		return
+	}
+	ResponseHandler.Go(c).SetData(&LoginResponse).Apply()
+
+	// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": LoginResponse, "message": "Login Berhasil"})
 }

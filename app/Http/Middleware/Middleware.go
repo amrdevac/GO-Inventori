@@ -10,12 +10,12 @@ import (
 
 func VerifyJWT(c *gin.Context) {
 	header := c.Request.Header["Token"]
-	
+
 	if header == nil {
 		ResponseHandler.Go(c).
 			SetMessage("Unauthorize").
 			SetHttpStatus(http.StatusBadRequest).
-			Get().StopProcess()
+			Apply().StopProcess()
 	}
 
 	claims := &jwt.StandardClaims{}
@@ -23,11 +23,11 @@ func VerifyJWT(c *gin.Context) {
 		func(token *jwt.Token) (interface{}, error) {
 			return []byte("secret"), nil
 		})
-
+	// fmt.Println("iniAppan", iniAppan)
 	if err != nil {
 		ResponseHandler.Go(c).
 			SetMessage("Access Unauthorized").
 			SetHttpStatus(http.StatusUnauthorized).
-			Get().StopProcess()
+			Apply().StopProcess()
 	}
 }

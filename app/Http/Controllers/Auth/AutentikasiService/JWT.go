@@ -1,15 +1,18 @@
 package AutentikasiService
 
 import (
+	controllers "inventori/app/Http/Controllers"
 	"inventori/app/Http/Controllers/User/UserModel"
-	"inventori/app/Provider/ErrorHandler"
+	"inventori/app/Provider/ResponseHandler"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
-func GetJWT(dataUser UserModel.User) map[string]interface{} {
-	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
+func GetJWT(dataUser UserModel.User) (map[string]interface{}, bool) {
+	response := make(map[string]interface{})
+
+	expiresAt := time.Now().Add(time.Minute * 1).Unix()
 
 	claims := &jwt.StandardClaims{
 		Audience:  dataUser.Name,
@@ -18,12 +21,13 @@ func GetJWT(dataUser UserModel.User) map[string]interface{} {
 
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), claims)
 	tokenString, err := token.SignedString([]byte("secret"))
-	ErrorHandler.Err(err).Check("SignerString Gagal").Error()
-
-	response := make(map[string]interface{})
+	if err != nil {
+		ResponseHandler.Go(controllers.GlobalGContext).CustomProccessFailure(err.Error())
+		return response, false
+	}
 
 	response["token"] = tokenString
 	response["user"] = dataUser
 
-	return response
+	return response, true
 }

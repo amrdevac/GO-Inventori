@@ -1,25 +1,31 @@
 package Hash
 
 import (
-	"inventori/app/Provider/ErrorHandler"
+	controllers "inventori/app/Http/Controllers"
+	"inventori/app/Provider/ResponseHandler"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Make(stringValue string) string {
+func Make(stringValue string) (string, bool) {
 	pass, err := bcrypt.GenerateFromPassword([]byte(stringValue), bcrypt.DefaultCost)
-	ErrorHandler.Err(err).Check("Password Hash").Error()
-	return string(pass)
+	if err != nil {
+		ResponseHandler.Go(controllers.GlobalGContext).CustomProccessFailure(err.Error())
+		return "", false
+	}
+	return string(pass), true
 }
 
-func Verify(stringValue string, hashValue string) bool {
+func Verify(stringValue string, hashValue string) (bool, string) {
 	err := bcrypt.CompareHashAndPassword([]byte(hashValue), []byte(stringValue))
-	ErrorHandler.Err(err).Check("Password Didn't Match").Error()
 
+	if err != nil {
+		return false, err.Error()
+	}
 	if err != nil || err == bcrypt.ErrMismatchedHashAndPassword || err == bcrypt.ErrHashTooShort {
-		return false
+		return false, "Password didnt match"
 	}
 
-	return true
+	return true, "Password match"
 
 }
