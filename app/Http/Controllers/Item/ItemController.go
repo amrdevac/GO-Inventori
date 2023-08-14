@@ -92,7 +92,6 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-
 	result, isSucccess := DeleteOnce(request)
 	if !isSucccess {
 		return

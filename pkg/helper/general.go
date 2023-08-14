@@ -19,3 +19,11 @@ func InArray(slice []string, value string) int {
 	return -1
 }
 
+func RangeArray(maxNumber int) []int {
+	var number []int
+	for i := 0; i < maxNumber; i++ {
+		number = append(number, i)
+	}
+	return number
+
+}

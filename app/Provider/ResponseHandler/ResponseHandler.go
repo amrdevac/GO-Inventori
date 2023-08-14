@@ -117,6 +117,18 @@ func (response Response) RequestValidationFailure(failResponse map[string]string
 	return response
 }
 
+func (response Response) CustomProccessFailure(failResponse string) Response {
+
+	response.Message = "Invalid payloads"
+	response.ResponseStatus = false
+	response.Data = map[string]interface{}{
+		"process_failure": failResponse,
+	}
+	response.HttpStatus = 400
+	ginContext.JSON(response.HttpStatus, response)
+	return response
+}
+
 func (response Response) RequestJSONRequired(failResponse error) Response {
 
 	response.Message = "Payload must be JSON format"

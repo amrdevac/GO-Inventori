@@ -52,6 +52,48 @@ func Detail(c *gin.Context) {
 	ResponseHandler.Go(c).SetData(result).Apply()
 }
 
+func DetailFull(c *gin.Context) {
+	RequestJson.MustJSON = true
+	request := DetailRequest{}
+	if RequestJson.Validate(c.ShouldBindJSON(&request), c) {
+		return
+	}
+
+	// get query Result
+	listData, isSucccess := GetOnceWithDetailTransaksiItem(request)
+	if !isSucccess {
+		return
+	}
+
+	// Create a Template to store array value of 'detail_transaksi' (result of 1 to many query)
+	var makeAnArrayOfObject []interface{}
+	// Transform Struct into ObjctInterface{}
+	mainParentData := helper.StructToInterfaceObj(listData, []string{})
+	for _, vDetailTransaksi := range listData.DetailTransaksi {
+		// Create a Template to store
+		notNullFixedDetailItem := make(map[string]interface{})
+
+		// Transform obj value of "detail transaksi"  as a interface
+		arrObjDefaultDetailTransaksi := helper.StructToInterfaceObj(vDetailTransaksi, []string{})
+
+		// Transform obj listData.DetailTransaksi" as a interface
+		detailItem := helper.StructToInterfaceObj(vDetailTransaksi.DetailItem, []string{})
+		if vDetailTransaksi.DetailItem.Nama != "" {
+			notNullFixedDetailItem = detailItem
+		}
+		
+		// Inject new fixed detail item that has value inside of it
+		arrObjDefaultDetailTransaksi["detail_item"] = notNullFixedDetailItem
+		// lastly , appen the object to make an array of "detail transaksi" that ben transformed
+		makeAnArrayOfObject = append(makeAnArrayOfObject, arrObjDefaultDetailTransaksi)
+	}
+	mainParentData["detail_transaksi"] = makeAnArrayOfObject
+
+	result := make(map[string]interface{})
+	result["data"] = mainParentData
+	ResponseHandler.Go(c).SetData(result).Apply()
+}
+
 func Store(c *gin.Context) {
 	RequestJson.MustJSON = false
 	request := InsertRequest{}

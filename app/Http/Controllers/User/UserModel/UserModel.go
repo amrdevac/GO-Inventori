@@ -7,7 +7,7 @@ import (
 var GormConnect = Mysql.Connect()
 
 type User struct {
-	UserID   string `json:"user_id" binding:"required" gorm:"primaryKey;autoIncrement"`
+	UserID   string `json:"user_id" gorm:"primaryKey;autoIncrement:true"`
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email"`
 	Gender   string `json:"gender"`
@@ -21,6 +21,6 @@ type UserUpdate struct {
 }
 
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }

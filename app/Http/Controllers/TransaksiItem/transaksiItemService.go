@@ -48,6 +48,23 @@ func GetOnce(request DetailRequest) (TransaksiItemTable, bool) {
 	return listItem, true
 }
 
+func GetOnceWithDetailTransaksiItem(request DetailRequest) (TransaksiItemWithDetail, bool) {
+	listItem := TransaksiItemWithDetail{}
+	gormResult := GormConnect.Preload("DetailTransaksi.DetailItem", "id_barang = ?", 4).Where(TablePrimary, request.Id_Transaksi).First(&listItem)
+
+	if gormResult.Error == gorm.ErrRecordNotFound {
+		ResponseHandler.Go(privateGContext).DataNotFound(strconv.Itoa(request.Id_Transaksi))
+		return listItem, false
+	}
+
+	if gormResult.Error != nil {
+		ResponseHandler.Go(privateGContext).DatabaseFetchFail(gormResult.Error)
+		return listItem, false
+	}
+
+	return listItem, true
+}
+
 func CountAll(request ListRequest) (int64, bool) {
 	listItem := []TransaksiItemTable{}
 	gormResult := GormConnect.Find(&listItem)

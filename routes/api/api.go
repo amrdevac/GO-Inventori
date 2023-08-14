@@ -5,6 +5,7 @@ import (
 	"inventori/app/Http/Controllers/Auth/AutentikasiController"
 	item "inventori/app/Http/Controllers/Item"
 	transaksiitem "inventori/app/Http/Controllers/TransaksiItem"
+	"inventori/app/Http/Middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,16 +16,20 @@ func InitializeRoutes() *gin.Engine {
 	router.POST("/register", AutentikasiController.Register)
 	router.POST("/login", AutentikasiController.Login)
 
-	router.Use(item.Constructor()).POST("/barang", item.Store)
-	router.Use(item.Constructor()).GET("/barang", item.Index)
-	router.Use(item.Constructor()).GET("/barang/detail", item.Detail)
-	router.Use(item.Constructor()).PUT("/barang", item.Update)
-	router.Use(item.Constructor()).DELETE("/barang", item.Delete)
+	authorized := router
+	authorized.Use(Middleware.VerifyJWT)
 
-	router.Use(transaksiitem.Constructor()).POST("/transaksi-item", transaksiitem.Store)
-	router.Use(transaksiitem.Constructor()).GET("/transaksi-item", transaksiitem.Index)
-	router.Use(transaksiitem.Constructor()).GET("/transaksi-item/detail", transaksiitem.Detail)
-	router.Use(transaksiitem.Constructor()).DELETE("/transaksi-item", transaksiitem.Delete)
+	authorized.Use(item.Constructor()).POST("/barang", item.Store)
+	authorized.Use(item.Constructor()).GET("/barang", item.Index)
+	authorized.Use(item.Constructor()).GET("/barang/detail", item.Detail)
+	authorized.Use(item.Constructor()).PUT("/barang", item.Update)
+	authorized.Use(item.Constructor()).DELETE("/barang", item.Delete)
+
+	authorized.Use(transaksiitem.Constructor()).POST("/transaksi-item", transaksiitem.Store)
+	authorized.Use(transaksiitem.Constructor()).GET("/transaksi-item", transaksiitem.Index)
+	authorized.Use(transaksiitem.Constructor()).GET("/transaksi-item/detail", transaksiitem.Detail)
+	authorized.Use(transaksiitem.Constructor()).GET("/transaksi-item/detail-full", transaksiitem.DetailFull)
+	authorized.Use(transaksiitem.Constructor()).DELETE("/transaksi-item", transaksiitem.Delete)
 	
 	
 	// authorized := router.Group("api")

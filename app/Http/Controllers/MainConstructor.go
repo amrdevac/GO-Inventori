@@ -7,8 +7,11 @@ import (
 )
 
 var MaindGormConnect = Mysql.Connect()
+var GlobalGContext *gin.Context
+
 func MainConstructor() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		GlobalGContext = c
 		c.Next()
 	}
 }
