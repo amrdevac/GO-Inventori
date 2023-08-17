@@ -5,7 +5,6 @@ import (
 	"inventori/app/Http/Controllers/Auth/AutentikasiController"
 	item "inventori/app/Http/Controllers/Item"
 	transaksiitem "inventori/app/Http/Controllers/TransaksiItem"
-	"inventori/app/Http/Middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +16,7 @@ func InitializeRoutes() *gin.Engine {
 	router.POST("/login", AutentikasiController.Login)
 
 	authorized := router
-	authorized.Use(Middleware.VerifyJWT)
+	// authorized.Use(Middleware.VerifyJWT)
 
 	authorized.Use(item.Constructor()).POST("/barang", item.Store)
 	authorized.Use(item.Constructor()).GET("/barang", item.Index)

@@ -58,7 +58,6 @@ func DetailFull(c *gin.Context) {
 	if RequestJson.Validate(c.ShouldBindJSON(&request), c) {
 		return
 	}
-
 	// get query Result
 	listData, isSucccess := GetOnceWithDetailTransaksiItem(request)
 	if !isSucccess {
@@ -81,7 +80,6 @@ func DetailFull(c *gin.Context) {
 		if vDetailTransaksi.DetailItem.Nama != "" {
 			notNullFixedDetailItem = detailItem
 		}
-		
 		// Inject new fixed detail item that has value inside of it
 		arrObjDefaultDetailTransaksi["detail_item"] = notNullFixedDetailItem
 		// lastly , appen the object to make an array of "detail transaksi" that ben transformed

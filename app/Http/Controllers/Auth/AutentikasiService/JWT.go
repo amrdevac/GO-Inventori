@@ -3,7 +3,6 @@ package AutentikasiService
 import (
 	"fmt"
 	controllers "inventori/app/Http/Controllers"
-	"inventori/app/Http/Controllers/User/UserModel"
 	"inventori/app/Provider/ResponseHandler"
 	"os"
 	"strconv"
@@ -12,15 +11,16 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func GetJWT(dataUser UserModel.User) (map[string]interface{}, bool) {
+func GetJWT(dataUser map[string]interface{}) (map[string]interface{}, bool) {
 	response := make(map[string]interface{})
 
 	expiredTime, _ := strconv.Atoi(os.Getenv("TokenExpired"))
 	fmt.Println(expiredTime)
 	expiresAt := time.Now().Add(time.Minute * time.Duration(expiredTime)).Unix()
 
+	nameOftheUser := dataUser["name"]
 	claims := &jwt.StandardClaims{
-		Audience:  dataUser.Name,
+		Audience:  nameOftheUser.(string),
 		ExpiresAt: expiresAt,
 	}
 

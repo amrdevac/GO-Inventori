@@ -65,8 +65,8 @@ func (response Response) BadRequest(argMessage string) Response {
 func (response Response) DatabaseFetchFail(argDBError error) Response {
 	dbError := make(map[string]interface{})
 	dbError["showing_db_error"] = true
+	
 	if os.Getenv("ShowDatabaseErrorString") == "true" {
-
 		dbError["database_error_msg"] = fmt.Sprintf("%v", argDBError)
 		response.Data = dbError
 	} else {

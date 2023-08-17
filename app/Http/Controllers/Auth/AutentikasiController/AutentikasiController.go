@@ -44,6 +44,4 @@ func Login(c *gin.Context) {
 		return
 	}
 	ResponseHandler.Go(c).SetData(&LoginResponse).Apply()
-
-	// c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": LoginResponse, "message": "Login Berhasil"})
 }

@@ -23,7 +23,7 @@ func VerifyJWT(c *gin.Context) {
 		func(token *jwt.Token) (interface{}, error) {
 			return []byte("secret"), nil
 		})
-	// fmt.Println("iniAppan", iniAppan)
+		
 	if err != nil {
 		ResponseHandler.Go(c).
 			SetMessage("Access Unauthorized").
